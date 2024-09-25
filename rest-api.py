@@ -13,23 +13,15 @@ import tempfile
  
 import os 
 
-# Replace 'your_api_key' with your actual API key
-#openai.api_key = "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"
-
 
 variables = load_dotenv()
 
-
-#model_size = 'small'
 token_count = 0
 
 app = Flask(__name__)
-#service = UserService()
-
-#nlp = spacy.load("en_core_web_sm")
 
 
-#Langchain initiation steps
+#Langchain prompt initiation
 template = """
 Based on the table schema below, write a SQL query that would answer the user's question:
 {schema}
@@ -41,15 +33,15 @@ SQL Query:
 prompt = ChatPromptTemplate.from_template(template)
 
 ##Initializing database connection for langchain
-
-#db_uri = "mysql+mysqlconnector://ai_web_app:webapppass123@localhost:3306/ai-gearhouse"
 db_uri = os.getenv('DB_URI')
 db = SQLDatabase.from_uri(db_uri)
 def get_schema(_):
     return db.get_table_info()
 
 ##Initializing the LLM for langchain
-llm = ChatOpenAI()
+llm = ChatOpenAI(
+    model = "gpt-3.5-turbo"
+)
 
 sql_chain = (
     RunnablePassthrough.assign(schema=get_schema)
@@ -103,7 +95,7 @@ def get_transcribed_audio():
         return sql_chain.invoke({"question": response })
 
         #return jsonify({'message': 'File processed successfully'})
-        return 'File processed successfully', 200
+        #return 'File processed successfully', 200
 
     finally:
         # Clean up: remove the file after processing
