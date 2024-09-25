@@ -14,7 +14,7 @@ import tempfile
 import os 
 
 
-variables = load_dotenv()
+load_dotenv()
 
 token_count = 0
 
