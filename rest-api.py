@@ -62,9 +62,7 @@ def add_headers(response):
 
 @app.route(rule="/transcriber",methods = ['POST'])
 def get_transcribed_audio():
-    #print(request.files['audio'])
-
-
+    
     if 'audio' not in request.files:
         return 'No file part', 400
 
@@ -86,62 +84,20 @@ def get_transcribed_audio():
         # Save the file temporarily
         file.save(file_path)
         print('File Saved')
-        # Process the file as needed
-        # For example, you might analyze the audio file here
+
+        # Processing the file as needed
         model = whisper.load_model("base")
         result = model.transcribe(file_path,fp16=False)
-        # result = model.transcribe("Corsair-query.mp3",fp16=False)
+
         response = result["text"]
         print(response)
         return sql_chain.invoke({"question": response })
-
-        #return jsonify({'message': 'File processed successfully'})
-        #return 'File processed successfully', 200
-
     finally:
         # Clean up: remove the file after processing
         print('Cleaning up the path ' + file_path)
         if os.path.exists(file_path):
             os.remove(file_path)
 
-    # # Process the file as needed
-    # # ...
-
-    # # Clean up the file
-    # os.remove(file_path)
-
-    
-
-    
-
-    # return f'File received: {blob_url}', 200
-    # if 'audio_data' not in request.files:
-    #     return 'No file part ', 400
-    
-    # file = request.files['audio_data']
-    # if file.filename == '':
-    #     return 'No selected file', 400
-    
-    # return f'File received: {file.filename}', 200
-
-    # model = whisper.load_model("base")
-    # result = model.transcribe(url,fp16=False)
-    # # result = model.transcribe("Corsair-query.mp3",fp16=False)
-    # response = result["text"]
-    # print(response)
-    # return sql_chain.invoke({"question": response })
-
-    #faster_model = WhisperModel(model_size,device="cpu",compute_type="int8")
-    #faster_result, _ = faster_model.transcribe("Corsair-query.mp3",beam_size='5')
-    #faster_result = list(faster_result)
-
-    # doc = nlp(result["text"])
-    # for ent in doc.ents:
-    #     print(ent.text, "|",ent.label_)
-
-    #response = personal_assistant(response)
-    #return faster_result
-    #return response
 
 if __name__ == "__main__":
     #Setting host as localhost
