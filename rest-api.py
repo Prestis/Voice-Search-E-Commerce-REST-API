@@ -26,6 +26,7 @@ template = """
 Based on the table schema below, write a SQL query that would answer the user's question:
 {schema}
 
+Remember to use left joins to get the info only from the 'products' table.
 Question: {question}
 SQL Query:
 """
