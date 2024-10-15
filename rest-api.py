@@ -26,7 +26,7 @@ template = """
 Based on the table schema below, write a SQL query that would answer the user's question:
 {schema}
 
-Remember to use left joins to get the info only from the 'products' table.
+Remember to use left joins to get all the info only from the 'products' table. 
 Question: {question}
 SQL Query:
 """
@@ -86,7 +86,7 @@ def get_transcribed_audio():
         print('File Saved')
 
         # Processing the file as needed
-        model = whisper.load_model("base")
+        model = whisper.load_model("base.en")
         result = model.transcribe(file_path,fp16=False)
 
         response = result["text"]
